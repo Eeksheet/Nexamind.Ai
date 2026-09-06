@@ -1,0 +1,36 @@
+# Experiment grid. Each entry is a name -> nested override of default.yaml.
+# Used by experiments/run_baselines.py, run_ablation.py, run_hop_sweep.py.
+seeds: [42, 43, 44]
+
+baselines:
+  closed_book:            {system: closed_book}
+  vanilla_rag:            {system: single_pass, retrieval: {method: tfidf}}
+  bm25_rag:               {system: single_pass, retrieval: {method: bm25}}
+  dense_rag:              {system: single_pass, retrieval: {method: dense}}
+  hybrid_rag:             {system: single_pass, retrieval: {method: hybrid}}
+  hybrid_rerank_rag:      {system: single_pass, retrieval: {method: hybrid, reranker: true}}
+  single_agent_iterative: {system: single_agent_iterative}
+  multi_no_planner:       {system: multi_agent, orchestrator: {use_planner: false}}
+  multi_no_critic:        {system: multi_agent, orchestrator: {use_critic: false}}
+  multi_no_rewrite:       {system: multi_agent, orchestrator: {use_query_rewriting: false}}
+  multi_agent_full:       {system: multi_agent}
+
+ablations:
+  full:                   {system: multi_agent}
+  no_planner:             {system: multi_agent, orchestrator: {use_planner: false}}
+  no_critic:              {system: multi_agent, orchestrator: {use_critic: false}}
+  no_iterative:           {system: multi_agent, orchestrator: {iterative: false}}
+  no_query_rewriting:     {system: multi_agent, orchestrator: {use_query_rewriting: false}}
+  no_entity_carryover:    {system: multi_agent, orchestrator: {use_entity_carryover: false}}
+  bm25_only:              {system: multi_agent, retrieval: {method: bm25}}
+  dense_only:             {system: multi_agent, retrieval: {method: dense}}
+  hybrid:                 {system: multi_agent, retrieval: {method: hybrid}}
+  with_reranker:          {system: multi_agent, retrieval: {reranker: true}}
+  top_k_2:                {system: multi_agent, retrieval: {top_k: 2}}
+  top_k_8:                {system: multi_agent, retrieval: {top_k: 8}}
+
+hop_sweep:
+  max_hops: [1, 2, 3, 4, 5]
+
+alpha_sweep: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
+top_k_sweep: [1, 3, 5, 10]

@@ -1,0 +1,59 @@
+# Default configuration. Every experiment starts from this file and applies overrides.
+dataset:
+  name: hotpotqa
+  split: validation
+  setting: distractor
+  size: smoke            # smoke | 100 | 500 | 1000 | full | <int>
+  allow_synthetic: true  # fall back to synthetic generator when real data is unavailable
+  force_synthetic: false
+  raw_dir: data/raw
+  processed_dir: data/processed
+  seed: 42
+
+retrieval:
+  method: hybrid         # bm25 | dense | hybrid | tfidf
+  top_k: 4
+  alpha: 0.6             # hybrid = alpha*bm25 + (1-alpha)*dense
+  embedding_model: sentence-transformers/all-MiniLM-L6-v2
+  embedding_batch_size: 64
+  reranker: false
+  reranker_model: cross-encoder/ms-marco-MiniLM-L-6-v2
+  rerank_candidates: 20
+  cache_dir: data/processed/cache
+  normalize: minmax
+  bm25_k1: 1.5
+  bm25_b: 0.75
+
+llm:
+  provider: auto         # auto | mock | anthropic | openai
+  model: claude-sonnet-4-5
+  temperature: 0.0
+  max_tokens: 400
+  timeout_s: 90
+  max_retries: 3
+  cache: true
+  cache_dir: data/processed/llm_cache
+  base_url: null
+  prompt_version: v2
+
+orchestrator:
+  use_planner: true
+  use_critic: true
+  use_query_rewriting: true
+  use_entity_carryover: true
+  iterative: true
+  budget:
+    max_hops: 3
+    max_llm_calls: 12
+    max_retrieval_calls: 8
+    max_tokens: 20000
+    max_latency_s: 120
+    max_cost_usd: null
+    confidence_threshold: 0.9
+
+experiment:
+  name: default
+  seeds: [42, 43, 44]
+  results_dir: results
+  save_traces: true
+  n_workers: 1
